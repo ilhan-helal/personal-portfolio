@@ -13,6 +13,7 @@ function FloatingName({
   direction,
   highlight,
   color,
+  isMobile,
 }) {
   const sizeClasses = {
     sm: "text-sm md:text-base",
@@ -25,7 +26,6 @@ function FloatingName({
     md: highlight ? 0.75 : 0.3,
     lg: highlight ? 0.9 : 0.4,
   };
-
   return (
     <motion.div
       className={`absolute font-mono whitespace-nowrap pointer-events-none select-none ${sizeClasses[size]} ${
@@ -51,7 +51,9 @@ function FloatingName({
         scale: [0.5, 1, 1, 0.8],
         x: [0, direction.x * 30, direction.x * 50, direction.x * 80],
         y: [0, direction.y * 20, direction.y * 40, direction.y * 60],
-        filter: ["blur(10px)", "blur(0px)", "blur(0px)", "blur(5px)"],
+        filter: isMobile
+  ? ["blur(5px)", "blur(0px)", "blur(0px)", "blur(3px)"]
+  : ["blur(10px)", "blur(0px)", "blur(0px)", "blur(5px)"],
       }}
       transition={{
         duration: highlight ? duration * 1.5 : duration,
@@ -100,6 +102,7 @@ function Particle({ delay }) {
 }
 
 export default function IntroScreen({ onFinish }) {
+  
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [floatingNames, setFloatingNames] = useState([]);
@@ -108,6 +111,7 @@ export default function IntroScreen({ onFinish }) {
   const [isMobile, setIsMobile] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
+  const particleCount = isMobile ? 8 : 20;
   /* Client-only setup */
   useEffect(() => {
     setMounted(true);
@@ -162,7 +166,7 @@ export default function IntroScreen({ onFinish }) {
         ];
 
       setFloatingNames((prev) => [
-        ...prev.slice(isPausedAt99 ? -40 : -25),
+        ...prev.slice(isPausedAt99 ? (isMobile ? -15 : -40) : (isMobile ? -10 : -25)),
         {
           id: crypto.randomUUID(),
           name: randomName.name,
@@ -226,7 +230,7 @@ export default function IntroScreen({ onFinish }) {
         >
           {/* Animated Gradient Orbs */}
           <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl"
+            className="absolute top-1/4 left-1/4 w-40 h-40 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full opacity-20 blur-3xl"
             style={{
               background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)'
             }}
@@ -243,7 +247,7 @@ export default function IntroScreen({ onFinish }) {
           />
           
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-40 h-40 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full opacity-20 blur-3xl"
             style={{
               background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)'
             }}
@@ -260,7 +264,7 @@ export default function IntroScreen({ onFinish }) {
           />
 
           <motion.div
-            className="absolute top-1/2 right-1/3 w-80 h-80 rounded-full opacity-15 blur-3xl"
+            className="absolute top-1/2 right-1/3 w-32 h-32 sm:w-56 sm:h-56 md:w-80 md:h-80 rounded-full opacity-15 blur-3xl"
             style={{
               background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)'
             }}
@@ -277,14 +281,14 @@ export default function IntroScreen({ onFinish }) {
           />
 
           {/* Floating particles */}
-          {!reducedMotion && Array.from({ length: 20 }).map((_, i) => (
+          {!reducedMotion && Array.from({ length: particleCount }).map((_, i) => (
             <Particle key={i} delay={i * 0.2} />
           ))}
 
           {/* Floating names */}
           {floatingNames.map((item) => (
-            <FloatingName key={item.id} {...item} />
-          ))}
+  <FloatingName key={item.id} {...item} isMobile={isMobile} />
+))}
 
           {/* Animated grid overlay */}
           <motion.div
@@ -327,7 +331,7 @@ export default function IntroScreen({ onFinish }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <motion.h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+              <motion.h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                 <motion.span 
                   className="inline-block bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent"
                   style={{
@@ -376,7 +380,7 @@ export default function IntroScreen({ onFinish }) {
 
             <div className="flex flex-col items-center gap-4">
               {/* Enhanced Progress Bar */}
-              <div className="relative w-64 md:w-80">
+              <div className="relative w-52 sm:w-64 md:w-80">
                 {/* Glow background */}
                 <motion.div
                   className="absolute inset-0 rounded-full blur-xl opacity-50"

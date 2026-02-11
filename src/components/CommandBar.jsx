@@ -29,10 +29,17 @@ const socials = [
 ];
 
 export default function CommandBar() {
+  const [isDesktop, setIsDesktop] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [active, setActive] = useState(false);
   const [hoveredSocial, setHoveredSocial] = useState(null);
   const [trail, setTrail] = useState([]);
+  useEffect(() => {
+  const check = () => setIsDesktop(window.innerWidth >= 1024);
+  check();
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
+}, []);
   
   // Sparkle offsets
   const sparkleOffsets = useRef(
@@ -48,9 +55,9 @@ export default function CommandBar() {
 
       // Add trail effect
       setTrail((prev) => [
-        ...prev.slice(-5),
-        { x: e.clientX, y: e.clientY, id: crypto.randomUUID() },
-      ]);
+  ...prev.slice(-3),
+  { x: e.clientX, y: e.clientY, id: crypto.randomUUID() },
+]);
 
       const nearRight = window.innerWidth - e.clientX < 200;
       const nearBottom = window.innerHeight - e.clientY < 200;
@@ -64,13 +71,15 @@ export default function CommandBar() {
   // Clean up old trail points
   useEffect(() => {
     const timer = setInterval(() => {
-      setTrail((prev) => prev.slice(-5));
+      setTrail((prev) => prev.slice(-3));
     }, 50);
     return () => clearInterval(timer);
   }, []);
 
-  return (
-    <>
+ if (!isDesktop) return null;
+
+return (
+  <>
       {/* Cursor trail effect */}
       <AnimatePresence>
         {trail.map((point, index) => (

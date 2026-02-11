@@ -60,7 +60,7 @@ export default function HomePage() {
       >
         {/* Animated Gradient Orbs */}
         <motion.div
-          className="absolute top-0 left-0 w-150 h-150 rounded-full opacity-20 blur-3xl"
+          className="absolute top-0 left-0 w-64 h-64 md:w-[600px] md:h-[600px] rounded-full opacity-20 blur-3xl"
           style={{
             background: 'radial-gradient(circle, #22c55e 0%, transparent 70%)'
           }}
@@ -77,7 +77,7 @@ export default function HomePage() {
         />
         
         <motion.div
-          className="absolute bottom-0 right-0 w-125 h-125 rounded-full opacity-20 blur-3xl"
+          className="absolute bottom-0 right-0 w-52 h-52 md:w-[500px] md:h-[500px] rounded-full opacity-20 blur-3xl"
           style={{
             background: 'radial-gradient(circle, #eab308 0%, transparent 70%)'
           }}
@@ -94,7 +94,7 @@ export default function HomePage() {
         />
 
         <motion.div
-          className="absolute top-1/2 left-1/3 w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+          className="absolute top-1/2 left-1/3 w-48 h-48 md:w-[400px] md:h-[400px] rounded-full opacity-15 blur-3xl"
           style={{
             background: 'radial-gradient(circle, #ef4444 0%, transparent 70%)'
           }}
@@ -111,7 +111,7 @@ export default function HomePage() {
         />
 
         {/* Floating Tech Icons */}
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: typeof window !== "undefined" && window.innerWidth < 768 ? 3 : 8 }).map((_, i) => (
           <FloatingIcon
             key={i}
             delay={i * 1.5}
@@ -155,7 +155,7 @@ export default function HomePage() {
         /> */}
         
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
-
+        <HeroSocialOverlay />
         <motion.div
           className="text-center relative z-10"
           initial={{ opacity: 0, y: 30 }}
@@ -183,7 +183,7 @@ export default function HomePage() {
 
           {/* Name */}
           <motion.h1 
-            className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -212,7 +212,7 @@ export default function HomePage() {
 
           {/* Title with gradient */}
           <motion.p 
-            className="text-xl md:text-2xl font-light mb-8"
+            className="text-lg sm:text-xl md:text-2xl font-light mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -224,7 +224,7 @@ export default function HomePage() {
 
           {/* Description */}
           <motion.p 
-            className="max-w-xl mx-auto text-white/70 text-sm md:text-base leading-relaxed mb-12"
+            className="max-w-lg sm:max-w-xl mx-auto text-white/70 text-sm sm:text-base leading-relaxed mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
@@ -234,17 +234,21 @@ export default function HomePage() {
 
           {/* CTA Buttons */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
             <a href="#feature">
-              <motion.button 
-                className="group relative px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium rounded-full overflow-hidden"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.button
+  className="group relative px-6 sm:px-8 py-3 
+  bg-gradient-to-r from-cyan-300 to-blue-500 
+  hover:from-green-400 hover:to-cyan-500
+  transition-all duration-300
+  text-white font-medium rounded-full overflow-hidden"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+>
                 <span className="relative z-10 flex items-center gap-2">
                   <Sparkles size={18} />
                   View Projects
@@ -259,7 +263,7 @@ export default function HomePage() {
             </a>
             
             <motion.button 
-              className="group relative px-8 py-3 border border-white/30 text-white font-medium rounded-full overflow-hidden backdrop-blur-sm"
+              className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-full overflow-hidden backdrop-blur-sm"
               whileHover={{ scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.5)' }}
               whileTap={{ scale: 0.95 }}
             >
@@ -278,7 +282,7 @@ export default function HomePage() {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
           transition={{ 
@@ -295,9 +299,6 @@ export default function HomePage() {
           </div>
         </motion.div>
       </div>
-
-      <HeroSocialOverlay />
-
 
       {/* FEATURED PROJECTS */}
       <FeatureProjects />
