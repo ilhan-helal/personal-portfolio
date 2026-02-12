@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Code2, Sparkles, Zap } from "lucide-react";
 import HeroSocialOverlay from "@/components/HeroSocialOverlay";
 import FeatureProjects from "@/components/FeatureProjects";
+import CommandBar from "@/components/CommandBar";
 
 /* Floating Tech Icons */
 function FloatingIcon({ delay, duration, xRange, yRange }) {
@@ -45,7 +46,7 @@ export default function HomePage() {
       
       {/* HERO SECTION */}
       <div
-        className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden"
+        className="min-h-screen flex flex-col items-center justify-start pt-28 sm:justify-center sm:pt-0 px-6 relative overflow-hidden"
         style={{
           background: `
   linear-gradient(
@@ -154,17 +155,17 @@ export default function HomePage() {
           }}
         /> */}
         
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50" />
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none sm:hidden" />
         <HeroSocialOverlay />
         <motion.div
-          className="text-center relative z-10"
+          className="text-center relative z-10 mt-6 sm:mt-0 space-y-4 sm:space-y-0"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           {/* Hello Label */}
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 backdrop-blur-sm mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-tr-3xl rounded-bl-3xl border border-cyan-400/20 bg-cyan-400/5 backdrop-blur-sm mb-8 sm:mb-6"
             animate={{
               borderColor: ['rgba(6, 182, 212, 0.2)', 'rgba(34, 197, 94, 0.3)', 'rgba(6, 182, 212, 0.2)'],
             }}
@@ -183,7 +184,7 @@ export default function HomePage() {
 
           {/* Name */}
           <motion.h1 
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 sm:mb-6"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -212,7 +213,7 @@ export default function HomePage() {
 
           {/* Title with gradient */}
           <motion.p 
-            className="text-lg sm:text-xl md:text-2xl font-light mb-8"
+            className="text-lg sm:text-xl md:text-2xl font-light mb-10 sm:mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -224,7 +225,7 @@ export default function HomePage() {
 
           {/* Description */}
           <motion.p 
-            className="max-w-lg sm:max-w-xl mx-auto text-white/70 text-sm sm:text-base leading-relaxed mb-12"
+            className="max-w-lg sm:max-w-xl mx-auto text-white/70 text-sm sm:text-base leading-relaxed mb-14 sm:mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
@@ -234,7 +235,7 @@ export default function HomePage() {
 
           {/* CTA Buttons */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
@@ -245,7 +246,7 @@ export default function HomePage() {
   bg-gradient-to-r from-cyan-300 to-blue-500 
   hover:from-green-400 hover:to-cyan-500
   transition-all duration-300
-  text-white font-medium rounded-full overflow-hidden"
+  text-white font-medium rounded-md overflow-hidden"
   whileHover={{ scale: 1.05 }}
   whileTap={{ scale: 0.95 }}
 >
@@ -263,7 +264,7 @@ export default function HomePage() {
             </a>
             
             <motion.button 
-              className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-full overflow-hidden backdrop-blur-sm"
+              className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-2xl overflow-hidden backdrop-blur-sm"
               whileHover={{ scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.5)' }}
               whileTap={{ scale: 0.95 }}
             >
@@ -300,7 +301,8 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      {/* FEATURED PROJECTS */}
+      {/* FEATURED PROJECTS and Command Bar*/}
+      <CommandBar />
       <FeatureProjects />
     </motion.div>
   );

@@ -41,19 +41,14 @@ function FloatingName({
       initial={{ opacity: 0, scale: 0.5, filter: "blur(10px)" }}
       animate={{
         opacity: highlight
-          ? [
-              0,
-              opacityMap[size],
-              opacityMap[size],
-              opacityMap[size] * 0.8,
-            ]
+          ? [0, opacityMap[size], opacityMap[size], opacityMap[size] * 0.8]
           : [0, opacityMap[size], opacityMap[size], 0],
         scale: [0.5, 1, 1, 0.8],
         x: [0, direction.x * 30, direction.x * 50, direction.x * 80],
         y: [0, direction.y * 20, direction.y * 40, direction.y * 60],
         filter: isMobile
-  ? ["blur(5px)", "blur(0px)", "blur(0px)", "blur(3px)"]
-  : ["blur(10px)", "blur(0px)", "blur(0px)", "blur(5px)"],
+          ? ["blur(5px)", "blur(0px)", "blur(0px)", "blur(3px)"]
+          : ["blur(10px)", "blur(0px)", "blur(0px)", "blur(5px)"],
       }}
       transition={{
         duration: highlight ? duration * 1.5 : duration,
@@ -102,7 +97,6 @@ function Particle({ delay }) {
 }
 
 export default function IntroScreen({ onFinish }) {
-  
   const [mounted, setMounted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [floatingNames, setFloatingNames] = useState([]);
@@ -117,7 +111,7 @@ export default function IntroScreen({ onFinish }) {
     setMounted(true);
     setIsMobile(window.innerWidth < 768);
     setReducedMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     );
   }, []);
 
@@ -130,15 +124,49 @@ export default function IntroScreen({ onFinish }) {
     "text-violet-400",
   ];
 
-  const getRandomPosition = () => ({
-    x: Math.random() * 85 + 5,
-    y: Math.random() * 85 + 5,
-  });
+  // Cinematic Edge-based Position
+const getCinematicPosition = () => {
+  const zone = Math.random();
 
-  const getRandomDirection = () => ({
-    x: (Math.random() - 0.5) * 2,
-    y: (Math.random() - 0.5) * 2,
-  });
+  // Left Edge
+  if (zone < 0.25) {
+    return {
+      x: Math.random() * 15,
+      y: Math.random() * 100,
+    };
+  }
+
+  // Right Edge
+  if (zone < 0.5) {
+    return {
+      x: 85 + Math.random() * 15,
+      y: Math.random() * 100,
+    };
+  }
+
+  // Top Edge
+  if (zone < 0.75) {
+    return {
+      x: 20 + Math.random() * 60,
+      y: Math.random() * 15,
+    };
+  }
+
+  // Bottom Edge
+  return {
+    x: 20 + Math.random() * 60,
+    y: 85 + Math.random() * 15,
+  };
+};
+
+// Cinematic Direction Based on Position
+const getCinematicDirection = (position) => {
+  if (position.x < 20) return { x: 1, y: 0 };     // Left → Right
+  if (position.x > 80) return { x: -1, y: 0 };    // Right → Left
+  if (position.y < 20) return { x: 0, y: 1 };     // Top → Down
+  return { x: 0, y: -1 };                         // Bottom → Up
+};
+
 
   const getRandomSize = () => {
     const r = Math.random();
@@ -156,30 +184,34 @@ export default function IntroScreen({ onFinish }) {
         ? 180
         : 100
       : isMobile
-      ? 300
-      : 200;
+        ? 300
+        : 200;
 
     const interval = setInterval(() => {
       const randomName =
-        nameTranslations[
-          Math.floor(Math.random() * nameTranslations.length)
-        ];
+        nameTranslations[Math.floor(Math.random() * nameTranslations.length)];
 
       setFloatingNames((prev) => [
-        ...prev.slice(isPausedAt99 ? (isMobile ? -15 : -40) : (isMobile ? -10 : -25)),
-        {
-          id: crypto.randomUUID(),
-          name: randomName.name,
-          position: getRandomPosition(),
-          size: getRandomSize(),
-          duration: isPausedAt99
-            ? 5 + Math.random() * 3
-            : 3 + Math.random() * 2,
-          direction: getRandomDirection(),
-          highlight: isPausedAt99,
-          color: colors[Math.floor(Math.random() * colors.length)],
-        },
-      ]);
+  ...prev.slice(
+    isPausedAt99 ? (isMobile ? -15 : -40) : isMobile ? -10 : -25,
+  ),
+  (() => {
+    const pos = getCinematicPosition();
+    return {
+      id: crypto.randomUUID(),
+      name: randomName.name,
+      position: pos,
+      size: getRandomSize(),
+      duration: isPausedAt99
+        ? 5 + Math.random() * 3
+        : 3 + Math.random() * 2,
+      direction: getCinematicDirection(pos),
+      highlight: isPausedAt99,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    };
+  })(),
+]);
+
     }, spawnInterval);
 
     return () => clearInterval(interval);
@@ -220,7 +252,8 @@ export default function IntroScreen({ onFinish }) {
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, #0a0a0f 0%, #1a0b2e 25%, #16213e 50%, #0f172a 75%, #020617 100%)'
+            background:
+              "linear-gradient(135deg, #0a0a0f 0%, #1a0b2e 25%, #16213e 50%, #0f172a 75%, #020617 100%)",
           }}
           exit={{ opacity: 0, scale: 1.1 }}
           transition={{
@@ -232,7 +265,8 @@ export default function IntroScreen({ onFinish }) {
           <motion.div
             className="absolute top-1/4 left-1/4 w-40 h-40 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full opacity-20 blur-3xl"
             style={{
-              background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)'
+              background:
+                "radial-gradient(circle, #6366f1 0%, transparent 70%)",
             }}
             animate={{
               x: [0, 100, 0],
@@ -245,11 +279,12 @@ export default function IntroScreen({ onFinish }) {
               ease: "easeInOut",
             }}
           />
-          
+
           <motion.div
             className="absolute bottom-1/4 right-1/4 w-40 h-40 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full opacity-20 blur-3xl"
             style={{
-              background: 'radial-gradient(circle, #06b6d4 0%, transparent 70%)'
+              background:
+                "radial-gradient(circle, #06b6d4 0%, transparent 70%)",
             }}
             animate={{
               x: [0, -100, 0],
@@ -266,7 +301,8 @@ export default function IntroScreen({ onFinish }) {
           <motion.div
             className="absolute top-1/2 right-1/3 w-32 h-32 sm:w-56 sm:h-56 md:w-80 md:h-80 rounded-full opacity-15 blur-3xl"
             style={{
-              background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)'
+              background:
+                "radial-gradient(circle, #a855f7 0%, transparent 70%)",
             }}
             animate={{
               x: [0, 50, 0],
@@ -281,14 +317,15 @@ export default function IntroScreen({ onFinish }) {
           />
 
           {/* Floating particles */}
-          {!reducedMotion && Array.from({ length: particleCount }).map((_, i) => (
-            <Particle key={i} delay={i * 0.2} />
-          ))}
+          {!reducedMotion &&
+            Array.from({ length: particleCount }).map((_, i) => (
+              <Particle key={i} delay={i * 0.2} />
+            ))}
 
           {/* Floating names */}
           {floatingNames.map((item) => (
-  <FloatingName key={item.id} {...item} isMobile={isMobile} />
-))}
+            <FloatingName key={item.id} {...item} isMobile={isMobile} />
+          ))}
 
           {/* Animated grid overlay */}
           <motion.div
@@ -301,7 +338,7 @@ export default function IntroScreen({ onFinish }) {
               backgroundSize: "50px 50px",
             }}
             animate={{
-              backgroundPosition: ['0px 0px', '50px 50px'],
+              backgroundPosition: ["0px 0px", "50px 50px"],
             }}
             transition={{
               duration: 20,
@@ -314,7 +351,7 @@ export default function IntroScreen({ onFinish }) {
           <motion.div
             className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"
             animate={{
-              top: ['0%', '100%'],
+              top: ["0%", "100%"],
             }}
             transition={{
               duration: 3,
@@ -331,46 +368,69 @@ export default function IntroScreen({ onFinish }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <motion.h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-                <motion.span 
-                  className="inline-block bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent"
-                  style={{
-                    textShadow: '0 0 30px rgba(34, 197, 94, 0.5)',
-                  }}
-                  animate={{
-                    filter: ['brightness(1)', 'brightness(1.2)', 'brightness(1)'],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                  }}
-                >
-                  Web
-                </motion.span>
-                {" "}
-                <motion.span 
-                  className="inline-block bg-gradient-to-r from-red-500 via-rose-600 to-red-700 bg-clip-text text-transparent"
-                  style={{
-                    textShadow: '0 0 30px rgba(239, 68, 68, 0.5)',
-                  }}
-                  animate={{
-                    filter: ['brightness(1)', 'brightness(1.2)', 'brightness(1)'],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: 0.5,
-                  }}
-                >
-                  Developer
-                </motion.span>
-              </motion.h1>
+             <motion.h1
+  className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-wider uppercase"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+>
+
+  {/* Neon Stroke Layer */}
+  <motion.span
+    className="absolute inset-0 text-transparent 
+    [-webkit-text-stroke:2px_rgba(0,255,255,0.7)]"
+    animate={{
+      opacity: [1, 0.85, 1, 0.9, 1],
+      filter: [
+        "drop-shadow(0 0 8px rgba(0,255,255,0.6))",
+        "drop-shadow(0 0 18px rgba(0,255,255,0.9))",
+        "drop-shadow(0 0 8px rgba(0,255,255,0.6))",
+        "drop-shadow(0 0 14px rgba(168,85,247,0.7))",
+        "drop-shadow(0 0 8px rgba(0,255,255,0.6))",
+      ],
+    }}
+    transition={{
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  >
+    WEB DEVELOPER
+  </motion.span>
+
+  {/* Glow Fill Layer */}
+  <motion.span
+    className="relative bg-gradient-to-r 
+    from-cyan-400 via-purple-500 to-pink-500 
+    bg-clip-text text-transparent"
+    style={{ backgroundSize: "200% 200%" }}
+    animate={{
+      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+      filter: [
+        "brightness(1)",
+        "brightness(1.15)",
+        "brightness(0.95)",
+        "brightness(1.1)",
+        "brightness(1)",
+      ],
+    }}
+    transition={{
+      duration: 6,
+      repeat: Infinity,
+      ease: "linear",
+    }}
+  >
+    WEB DEVELOPER
+  </motion.span>
+
+</motion.h1>
 
               <motion.div
                 className="h-0.5 mt-4 mx-auto overflow-hidden rounded-full"
                 style={{
-                  background: 'linear-gradient(90deg, transparent, #06b6d4, #a855f7, transparent)',
-                  boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)',
+                  background:
+                    "linear-gradient(90deg, transparent, #06b6d4, #a855f7, transparent)",
+                  boxShadow: "0 0 20px rgba(6, 182, 212, 0.5)",
                 }}
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
@@ -385,7 +445,8 @@ export default function IntroScreen({ onFinish }) {
                 <motion.div
                   className="absolute inset-0 rounded-full blur-xl opacity-50"
                   style={{
-                    background: 'linear-gradient(90deg, #06b6d4, #6366f1, #a855f7)',
+                    background:
+                      "linear-gradient(90deg, #06b6d4, #6366f1, #a855f7)",
                   }}
                   animate={{
                     opacity: [0.3, 0.6, 0.3],
@@ -395,17 +456,18 @@ export default function IntroScreen({ onFinish }) {
                     repeat: Infinity,
                   }}
                 />
-                
+
                 {/* Progress bar container */}
                 <div className="relative h-2 bg-white/5 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
                   {/* Animated background */}
                   <motion.div
                     className="absolute inset-0 opacity-30"
                     style={{
-                      background: 'linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent)',
+                      background:
+                        "linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent)",
                     }}
                     animate={{
-                      x: ['-100%', '200%'],
+                      x: ["-100%", "200%"],
                     }}
                     transition={{
                       duration: 1.5,
@@ -413,24 +475,26 @@ export default function IntroScreen({ onFinish }) {
                       ease: "linear",
                     }}
                   />
-                  
+
                   {/* Progress fill */}
                   <motion.div
                     className="h-full relative overflow-hidden"
-                    style={{ 
+                    style={{
                       width: `${progress}%`,
-                      background: 'linear-gradient(90deg, #06b6d4, #6366f1, #a855f7)',
-                      boxShadow: '0 0 20px currentColor',
+                      background:
+                        "linear-gradient(90deg, #06b6d4, #6366f1, #a855f7)",
+                      boxShadow: "0 0 20px currentColor",
                     }}
                   >
                     {/* Shimmer effect */}
                     <motion.div
                       className="absolute inset-0"
                       style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
                       }}
                       animate={{
-                        x: ['-100%', '200%'],
+                        x: ["-100%", "200%"],
                       }}
                       transition={{
                         duration: 1,
@@ -448,13 +512,13 @@ export default function IntroScreen({ onFinish }) {
                 <motion.span
                   className="text-white font-bold text-lg bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent"
                   style={{
-                    textShadow: '0 0 20px rgba(6, 182, 212, 0.5)',
+                    textShadow: "0 0 20px rgba(6, 182, 212, 0.5)",
                   }}
                 >
                   {Math.floor(progress) < 100
-  ? Math.floor(progress).toString().padStart(2, "0")
-  : "100"}
-%
+                    ? Math.floor(progress).toString().padStart(2, "0")
+                    : "100"}
+                  %
                 </motion.span>
                 <span className="text-cyan-400/60">]</span>
                 <motion.span
@@ -462,7 +526,7 @@ export default function IntroScreen({ onFinish }) {
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                   style={{
-                    textShadow: '0 0 10px currentColor',
+                    textShadow: "0 0 10px currentColor",
                   }}
                 >
                   ▎
@@ -472,8 +536,12 @@ export default function IntroScreen({ onFinish }) {
               {/* Status text */}
               <motion.div
                 className="font-mono text-xs tracking-wider px-4 py-2 rounded-full border border-cyan-400/20 bg-cyan-400/5 backdrop-blur-sm"
-                animate={{ 
-                  borderColor: ['rgba(6, 182, 212, 0.2)', 'rgba(99, 102, 241, 0.3)', 'rgba(6, 182, 212, 0.2)'],
+                animate={{
+                  borderColor: [
+                    "rgba(6, 182, 212, 0.2)",
+                    "rgba(99, 102, 241, 0.3)",
+                    "rgba(6, 182, 212, 0.2)",
+                  ],
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -485,10 +553,10 @@ export default function IntroScreen({ onFinish }) {
                   {progress < 30
                     ? "⚡ INITIALIZING SYSTEMS..."
                     : progress < 60
-                    ? "📦 LOADING ASSETS..."
-                    : progress < 90
-                    ? "🎨 PREPARING PORTFOLIO..."
-                    : "✨ ALMOST THERE..."}
+                      ? "📦 LOADING ASSETS..."
+                      : progress < 90
+                        ? "🎨 PREPARING PORTFOLIO..."
+                        : "✨ ALMOST THERE..."}
                 </motion.span>
               </motion.div>
             </div>
@@ -516,23 +584,23 @@ export default function IntroScreen({ onFinish }) {
           >
           </motion.div> */}
 
-          <motion.div 
+          <motion.div
             className="absolute bottom-6 left-6 font-mono text-xs text-indigo-400/40"
             animate={{ opacity: [0.4, 0.7, 0.4] }}
             transition={{ duration: 2, repeat: Infinity, delay: 1 }}
             style={{
-              textShadow: '0 0 10px rgba(99, 102, 241, 0.3)',
+              textShadow: "0 0 10px rgba(99, 102, 241, 0.3)",
             }}
           >
             {"// Frontend Developer"}
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="absolute bottom-6 right-6 font-mono text-xs text-cyan-400/40"
             animate={{ opacity: [0.4, 0.7, 0.4] }}
             transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
             style={{
-              textShadow: '0 0 10px rgba(6, 182, 212, 0.3)',
+              textShadow: "0 0 10px rgba(6, 182, 212, 0.3)",
             }}
           >
             {"</intro>"}

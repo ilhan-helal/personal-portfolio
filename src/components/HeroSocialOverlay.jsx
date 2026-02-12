@@ -89,6 +89,8 @@ export default function HeroSocialOverlay() {
   }, []);
 
   return (
+  <>
+    {/* Desktop Floating Layout */}
     <AnimatePresence>
       {items.map((item) => {
         const Icon = item.icon;
@@ -103,94 +105,56 @@ export default function HeroSocialOverlay() {
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ 
-              opacity: 1, 
-              scale: 1, 
-              y: 0,
-            }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            whileHover={{ 
-              scale: 1.05,
-              y: -5,
-            }}
-            transition={{ 
-              duration: 0.4, 
-              ease: "easeOut",
-              scale: { duration: 0.2 },
-            }}
-            className={`absolute z-20 group flex items-center gap-3 px-4 py-3 rounded-full
+            whileHover={{ scale: 1.05, y: -5 }}
+            transition={{ duration: 0.4 }}
+            className={`hidden md:flex absolute z-20 group items-center gap-3 px-4 py-3 rounded-full
               backdrop-blur-md bg-gradient-to-r ${hovered === item.id ? item.hoverGradient : item.gradient}
               border transition-all duration-300
               ${item.highlight && hovered !== item.id ? 'border-yellow-500/40 shadow-lg shadow-yellow-500/20' : 'border-white/10'}
               ${positionMap[item.position]}
             `}
             style={{
-              boxShadow: hovered === item.id 
-                ? `0 0 30px ${item.glowColor}, 0 0 60px ${item.glowColor}` 
-                : item.highlight 
-                  ? `0 0 20px ${item.glowColor}` 
+              boxShadow: hovered === item.id
+                ? `0 0 30px ${item.glowColor}, 0 0 60px ${item.glowColor}`
+                : item.highlight
+                  ? `0 0 20px ${item.glowColor}`
                   : 'none',
             }}
           >
-            {/* Glow Background */}
-            <motion.div
-              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-xl"
-              style={{
-                background: `radial-gradient(circle, ${item.glowColor} 0%, transparent 70%)`,
-              }}
-              transition={{ duration: 0.3 }}
-            />
-
-            {/* Icon with animation */}
-            <motion.div
-              animate={{
-                rotate: hovered === item.id ? [0, -10, 10, 0] : 0,
-              }}
-              transition={{ duration: 0.5 }}
-            >
-              <Icon size={18} className={`${item.iconColor} relative z-10`} />
-            </motion.div>
-
-            {/* Label */}
-            <span className="text-sm font-medium text-white relative z-10">
+            <Icon size={15} className={`${item.iconColor}`} />
+            <span className="text-sm font-medium text-white">
               {item.label}
             </span>
-
-            {/* Highlight pulse for resume */}
-            {item.highlight && hovered !== item.id && (
-              <motion.div
-                className="absolute -inset-1 rounded-full border-2 border-yellow-400/30"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  opacity: [0.5, 0.2, 0.5],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            )}
-
-            {/* Shimmer effect on hover */}
-            {hovered === item.id && (
-              <motion.div
-                className="absolute inset-0 rounded-full overflow-hidden"
-                initial={{ x: '-100%' }}
-                animate={{ x: '100%' }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-              >
-                <div 
-                  className="h-full w-full"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
-                  }}
-                />
-              </motion.div>
-            )}
           </motion.a>
         );
       })}
     </AnimatePresence>
-  );
+
+    {/* Mobile Top Icon Row */}
+    <div className="md:hidden absolute top-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-10">
+      {items.map((item) => {
+          const Icon = item.icon;
+          if (!visible[item.id]) return null;
+
+          return (
+            <motion.a
+              key={item.id}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="text-white"
+            >
+              <Icon size={26} className={`${item.iconColor}`} />
+            </motion.a>
+          );
+        })}
+    </div>
+  </>
+);
+
 }
