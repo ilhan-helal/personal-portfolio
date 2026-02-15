@@ -1,18 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect} from "react";
 import { Code2, Sparkles, Zap } from "lucide-react";
 import HeroSocialOverlay from "@/components/HeroSocialOverlay";
 import FeatureProjects from "@/components/FeatureProjects";
 import CommandBar from "@/components/CommandBar";
+import AboutSection from "@/components/AboutSection";
+
 
 /* Floating Tech Icons */
 function FloatingIcon({ delay, duration, xRange, yRange }) {
   const icons = [Code2, Sparkles, Zap];
   const IconRef = useRef(icons[Math.floor(Math.random() * icons.length)]);
   const Icon = IconRef.current;
-
+  
   return (
     <motion.div
       className="absolute text-white/10"
@@ -36,6 +38,15 @@ function FloatingIcon({ delay, duration, xRange, yRange }) {
 }
 
 export default function HomePage() {
+  useEffect(() => {
+  if (window.location.hash) {
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
+  }
+}, []);
   return (
     <motion.div
       className="min-h-screen bg-black text-white overflow-x-hidden"
@@ -240,8 +251,11 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
-            <a href="#feature">
-              <motion.button
+            <motion.button
+  onClick={() => {
+    const section = document.getElementById("feature");
+    section?.scrollIntoView({ behavior: "smooth" });
+  }}
   className="group relative px-6 sm:px-8 py-3 
   bg-gradient-to-r from-cyan-300 to-blue-500 
   hover:from-green-400 hover:to-cyan-500
@@ -260,9 +274,7 @@ export default function HomePage() {
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.3 }}
                 />
-              </motion.button>
-            </a>
-            
+              </motion.button>            
             <motion.button 
               className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-2xl overflow-hidden backdrop-blur-sm"
               whileHover={{ scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.5)' }}
@@ -304,6 +316,7 @@ export default function HomePage() {
       {/* FEATURED PROJECTS and Command Bar*/}
       <CommandBar />
       <FeatureProjects />
+      <AboutSection />
     </motion.div>
   );
 }
