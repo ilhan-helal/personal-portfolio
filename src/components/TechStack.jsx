@@ -15,6 +15,7 @@ export default function TechStack() {
   const runnerRef = useRef(null);
   const bodiesRef = useRef([]);
   const [activeTab, setActiveTab] = useState("tech");
+  const [started, setStarted] = useState(false);
 
   const techStacks = [
     { name: "ReactJS", icon: "⚛️", color: "from-cyan-400 to-blue-500" },
@@ -230,6 +231,7 @@ export default function TechStack() {
   };
 
   useEffect(() => {
+    if (!started) return;
     const pills = pillsRef.current.filter(Boolean);
 
     gsap.to(pills, {
@@ -245,7 +247,7 @@ export default function TechStack() {
     });
 
     return cleanupPhysics;
-  }, [activeTab]);
+ }, [activeTab, started]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -312,7 +314,54 @@ export default function TechStack() {
         </div>
       </div>
 
+{!started && (
+  <div className="absolute inset-0 z-30 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 md:gap-14 px-6">
+
+    {/* Tech Stack Card */}
+    <div
+      onClick={() => {
+        setActiveTab("tech");
+        setStarted(true);
+      }}
+      className="group cursor-pointer w-full max-w-[280px]"
+    >
+      <div className="relative w-full py-8 sm:py-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center text-white transition-all duration-500 group-hover:scale-105">
+
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-400/20 to-purple-400/20 blur-xl opacity-0 group-hover:opacity-100 transition" />
+
+        <span className="text-base sm:text-lg tracking-widest">TECH STACK</span>
+        <span className="text-white/60 text-xs sm:text-sm mt-2 text-center">
+          React • Next • APIs
+        </span>
+
+      </div>
+    </div>
+
+    {/* More Skills Card */}
+    <div
+      onClick={() => {
+        setActiveTab("skills");
+        setStarted(true);
+      }}
+      className="group cursor-pointer w-full max-w-[280px]"
+    >
+      <div className="relative w-full py-8 sm:py-10 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 flex flex-col items-center justify-center text-white transition-all duration-500 group-hover:scale-105">
+
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 blur-xl opacity-0 group-hover:opacity-100 transition" />
+
+        <span className="text-base sm:text-lg tracking-widest">MORE SKILLS</span>
+        <span className="text-white/60 text-xs sm:text-sm mt-2 text-center">
+          AI • SEO • Motion
+        </span>
+
+      </div>
+    </div>
+
+  </div>
+)}
+
       {/* Physics Container */}
+      {started && (
       <div
         ref={containerRef}
         className="absolute inset-0 top-12 sm:top-16 md:top-20 bottom-0 left-0 right-0 overflow-hidden"
@@ -339,6 +388,7 @@ export default function TechStack() {
           </div>
         ))}
       </div>
+      )}
     </section>
   );
 }
