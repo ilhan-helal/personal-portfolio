@@ -7,6 +7,7 @@ import HeroSocialOverlay from "@/components/HeroSocialOverlay";
 import FeatureProjects from "@/components/FeatureProjects";
 import CommandBar from "@/components/CommandBar";
 import AboutSection from "@/components/AboutSection";
+import Achievements from "./Achievements";
 
 
 /* Floating Tech Icons */
@@ -317,6 +318,7 @@ export default function HomePage() {
       <CommandBar />
       <FeatureProjects />
       <AboutSection />
+      <Achievements />
     </motion.div>
   );
 }
