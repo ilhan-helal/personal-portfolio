@@ -8,6 +8,8 @@ import FeatureProjects from "@/components/FeatureProjects";
 import CommandBar from "@/components/CommandBar";
 import AboutSection from "@/components/AboutSection";
 import Achievements from "./Achievements";
+import Award from "./Award";
+import Hobby from "./Hobby";
 
 
 /* Floating Tech Icons */
@@ -319,6 +321,8 @@ export default function HomePage() {
       <FeatureProjects />
       <AboutSection />
       <Achievements />
+      <Award />
+      <Hobby />
     </motion.div>
   );
 }
