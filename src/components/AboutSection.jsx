@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
@@ -14,6 +14,8 @@ export default function AboutSection() {
   const textRef = useRef(null);
   const techRevealRef = useRef(null);
   const filterRef = useRef(null);
+  const fullText = "Ilhan Helal";
+const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
     const el = textRef.current;
@@ -24,29 +26,21 @@ export default function AboutSection() {
     const split = new SplitType(el, { types: "words" });
 
     const highlightWords = [
-  "Ilhan",
-  "Helal",
-  "BCA",
-  "Lovely",
-  "Professional",
-  "University",
-  "frontend",
-  "web",
-  "optimizing",
-  "React.js",
-  "JavaScript",
-  "REST",
-  "API",
-  "leadership",
-  "problem-solving",
-  "captain",
-  "hackathon",
-  "curiosity",
-  "impactful",
-  "functionality",
-  "performance",
-  "design",
-  "excellence",
+ "Ilhan",
+"Helal",
+"BCA",
+"Frontend",
+"Developer",
+"CGPA",
+"React.js",
+"JavaScript",
+"REST",
+"Performance",
+"Scalable",
+"User",
+"Experience",
+"Problem-Solving",
+"Leadership"
     ];
 
     split.words.forEach((word) => {
@@ -65,9 +59,10 @@ export default function AboutSection() {
   scrub: true,
   pin: true,
   invalidateOnRefresh: true,
+  
 },
     });
-
+    
     /* ========================
        1️⃣ Highlight Glow
     ========================= */
@@ -125,10 +120,43 @@ export default function AboutSection() {
   },
   "-=0.6"
 );
+// ========================
+// ✍️ Typing Signature Loop
+// ========================
+let i = 0;
+let forward = true;
+let timeout;
+
+const type = () => {
+  if (forward) {
+    setDisplayText(fullText.slice(0, i + 1));
+    i++;
+
+    if (i === fullText.length) {
+      forward = false;
+      timeout = setTimeout(type, 800); // pause at full text
+      return;
+    }
+  } else {
+    setDisplayText(fullText.slice(0, i - 1));
+    i--;
+
+    if (i === 0) {
+      forward = true;
+      timeout = setTimeout(type, 400); // pause before retyping
+      return;
+    }
+  }
+
+  timeout = setTimeout(type, 120);
+};
+
+type();
 
     return () => {
       split.revert();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      clearTimeout(timeout);
     };
   }, []);
 
@@ -194,19 +222,47 @@ rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md"
         </div>
 
         <h2
-          ref={textRef}
-          className="text-sm sm:text-lg md:text-2xl lg:text-3xl leading-relaxed text-white/80 font-light"
-        >
-          I am Ilhan Helal, a BCA student at Lovely Professional University with a strong focus on frontend engineering and modern web development.
-I build responsive, high-performance web applications using JavaScript and React.js, with a solid foundation in C, C++, HTML, and CSS. I specialize in component-based architecture, clean code practices, REST API integration, and creating seamless user experiences.
-I approach development with a problem-solving mindset — optimizing performance, writing scalable code, and continuously learning emerging technologies.
-Beyond coding, I bring leadership and collaboration experience as a former team captain and hackathon participant, thriving in fast-paced, team-driven environments.
-Driven by curiosity and execution, I aim to build impactful digital products that combine functionality, performance, and design excellence.
-        </h2>
+  ref={textRef}
+  className="text-sm sm:text-lg md:text-2xl lg:text-3xl leading-relaxed text-white/80 font-light space-y-4"
+>
+  <span className="block">
+    I’m <span className="highlight-word">Ilhan Helal</span>, a{" "}
+    <span className="highlight-word">Frontend Developer</span> focused on building
+    modern, high-performance web experiences.
+  </span>
+
+  <span className="block">
+    🎓 <span className="highlight-word">BCA</span> — Lovely Professional University  
+    <br />
+    📊 CGPA: <span className="highlight-word">8.9</span>
+  </span>
+
+  <span className="block">
+    💻 Specialized in <span className="highlight-word">React.js</span>,{" "}
+    <span className="highlight-word">JavaScript</span>, and{" "}
+    <span className="highlight-word">REST APIs</span>
+  </span>
+
+  <span className="block">
+    ⚡ Focus: <span className="highlight-word">Performance</span>,{" "}
+    <span className="highlight-word">Scalable Code</span>, and{" "}
+    <span className="highlight-word">User Experience</span>
+  </span>
+
+  <span className="block">
+    🚀 Building impactful digital products with clean design & logic
+  </span>
+</h2>
 
         <div className="absolute -bottom-8 -right-3 text-6xl sm:text-8xl text-white/10 font-serif rotate-180">
           "
         </div>
+        {/* SIGNATURE */}
+<div className="absolute bottom-4 right-6 sm:bottom-6 sm:right-10 pointer-events-none">
+  <span className="signature-text">
+    {displayText}
+  </span>
+</div>
       </div>
     </section>
   );

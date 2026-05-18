@@ -148,6 +148,38 @@
   transform: rotateY(180deg);
   border: 1px solid rgba(0,255,255,0.2);
 }
+.signature-text {
+  font-family: "Brush Script MT", "Caveat", cursive;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 2px;
+
+  /* Glow effect */
+  text-shadow:
+    0 0 8px rgba(0, 255, 255, 0.5),
+    0 0 16px rgba(0, 255, 255, 0.3);
+
+  opacity: 0.8;
+  transform: rotate(-3deg);
+}
+.signature-text::after {
+  content: "|";
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .signature-text {
+    font-size: 1.6rem;
+  }
+}
 
 @layer base {
   * {
