@@ -162,6 +162,7 @@ type();
 
   return (
     <section
+    id="about"
       ref={sectionRef}
       className="min-h-screen relative bg-black flex items-center justify-center overflow-hidden"
       style={{

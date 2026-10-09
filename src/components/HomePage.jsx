@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRef, useEffect} from "react";
+import { useRouter } from "next/navigation";
 import { Code2, Sparkles, Zap } from "lucide-react";
 import HeroSocialOverlay from "@/components/HeroSocialOverlay";
 import FeatureProjects from "@/components/FeatureProjects";
@@ -10,6 +11,7 @@ import AboutSection from "@/components/AboutSection";
 import Achievements from "./Achievements";
 import Award from "./Award";
 import Hobby from "./Hobby";
+import Footer from "./Footer";
 
 
 /* Floating Tech Icons */
@@ -41,6 +43,7 @@ function FloatingIcon({ delay, duration, xRange, yRange }) {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   useEffect(() => {
   if (window.location.hash) {
     window.history.replaceState(
@@ -278,21 +281,26 @@ export default function HomePage() {
                   transition={{ duration: 0.3 }}
                 />
               </motion.button>            
-            <motion.button 
-              className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-2xl overflow-hidden backdrop-blur-sm"
-              whileHover={{ scale: 1.05, borderColor: 'rgba(234, 179, 8, 0.5)' }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent group-hover:text-white transition-all">
-                Contact Me
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-orange-500/20"
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.button>
+<motion.button
+  onClick={() => router.push("/contact")}
+  className="group relative px-6 sm:px-8 py-3 border border-white/30 text-white font-medium rounded-2xl overflow-hidden backdrop-blur-sm"
+  whileHover={{
+    scale: 1.05,
+    borderColor: "rgba(234, 179, 8, 0.5)",
+  }}
+  whileTap={{ scale: 0.95 }}
+>
+  <span className="relative z-10 bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent group-hover:text-white transition-all">
+    Contact Me
+  </span>
+
+  <motion.div
+    className="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-orange-500/20"
+    initial={{ scale: 0, opacity: 0 }}
+    whileHover={{ scale: 1, opacity: 1 }}
+    transition={{ duration: 0.3 }}
+  />
+</motion.button>
           </motion.div>
         </motion.div>
 
@@ -323,6 +331,7 @@ export default function HomePage() {
       <Achievements />
       <Award />
       <Hobby />
+      <Footer />
     </motion.div>
   );
 }
