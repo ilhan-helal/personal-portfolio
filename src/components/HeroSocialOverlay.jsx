@@ -9,7 +9,7 @@ const items = [
     id: "resume",
     label: "Resume",
     icon: FileText,
-    href: "ilhanhelalresume_.pdf",
+    href: "ilhanhelalresumeNOV2026.pdf",
     position: "top-center",
     delay: 1.5,
     highlight: true,
